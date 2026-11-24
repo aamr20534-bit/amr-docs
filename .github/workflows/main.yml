@@ -1,3 +1,4 @@
+
 name: Build AMR DOCS APK
 
 on:
@@ -35,17 +36,22 @@ jobs:
       - name: Build web application
         run: npm run build
 
-      - name: Verify Android project
+      - name: Check Capacitor configuration
         run: |
-          test -f android/gradlew
-          test -f android/app/build.gradle || test -f android/app/build.gradle.kts
+          if [ ! -f capacitor.config.ts ] && \
+             [ ! -f capacitor.config.json ] && \
+             [ ! -f capacitor.config.js ]; then
+            echo "Capacitor configuration file is missing"
+            exit 1
+          fi
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: ''
+      - name: Generate Android project if missing
+        run: |
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
 
-      - name: Sync Capacitor
+      - name: Sync Android project
         run: npx cap sync android
 
       - name: Build APK
