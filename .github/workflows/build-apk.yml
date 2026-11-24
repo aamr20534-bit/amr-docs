@@ -1,0 +1,101 @@
+name: Build AMR DOCS APK
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    env:
+      # The `secrets` context is not available in step-level `if:`; expose a flag instead.
+      HAS_KEYSTORE: ${{ secrets.KEYSTORE_BASE64 != '' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
+
+      - name: Verify Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -d "$ANDROID_HOME/platforms/android-34"
+          test -d "$ANDROID_HOME/build-tools/34.0.0"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: TypeScript typecheck & Vite production build
+        run: |
+          npm run lint
+          npm run build
+
+      - name: Ensure Capacitor Android platform & sync assets
+        run: |
+          set -euo pipefail
+          if [ ! -f android/gradlew ]; then
+            cp -r android android_custom_backup
+            # `cap add` refuses to run if ./android already exists
+            rm -rf android
+            npx cap add android
+            # Template splash PNGs clash with the custom drawable/splash.xml (duplicate resources)
+            find android/app/src/main/res -name 'splash.png' -delete
+            # Re-apply the project's custom manifest, resources and MainActivity
+            cp -rf android_custom_backup/app/src/main/. android/app/src/main/
+            rm -rf android_custom_backup
+          fi
+          npx cap sync android
+
+      - name: Build Debug APK
+        working-directory: android
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Upload AMR DOCS APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AMR-DOCS-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Build & Sign Release APK (if signing secrets are configured)
+        if: env.HAS_KEYSTORE == 'true'
+        working-directory: android
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > app/release.keystore
+          ./gradlew assembleRelease --stacktrace \
+            -Pandroid.injected.signing.store.file="$GITHUB_WORKSPACE/android/app/release.keystore" \
+            -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$KEY_PASSWORD"
+          rm -f app/release.keystore
+
+      - name: Upload Signed Release APK Artifact
+        if: env.HAS_KEYSTORE == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: AMR-DOCS-Release-APK
+          path: android/app/build/outputs/apk/release/app-release.apk

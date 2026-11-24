@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="amrBg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F2942" />
+      <stop offset="100%" stop-color="#1D4ED8" />
+    </linearGradient>
+    <linearGradient id="penGrad" x1="70" y1="38" x2="112" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#amrBg)" />
+  <!-- Document Sheet -->
+  <path
+    d="M34 24C30.6863 24 28 26.6863 28 30V98C28 101.314 30.6863 104 34 104H80C83.3137 104 86 101.314 86 98V42L68 24H34Z"
+    fill="#FFFFFF"
+  />
+  <path d="M68 24V38C68 40.2091 69.7909 42 72 42H86L68 24Z" fill="#DBEAFE" />
+  <!-- Document Lines -->
+  <rect x="38" y="50" width="32" height="5" rx="2.5" fill="#1D4ED8" />
+  <rect x="38" y="62" width="38" height="4" rx="2" fill="#94A3B8" />
+  <rect x="38" y="72" width="34" height="4" rx="2" fill="#94A3B8" />
+  <rect x="38" y="82" width="24" height="4" rx="2" fill="#CBD5E1" />
+  <!-- Tech Pen -->
+  <g transform="rotate(-35 92 78)">
+    <rect x="86" y="44" width="12" height="44" rx="4" fill="url(#penGrad)" stroke="#FFFFFF" stroke-width="2.5" />
+    <path d="M86 88L92 100L98 88H86Z" fill="#F8FAFC" stroke="#0F2942" stroke-width="1.5" />
+    <circle cx="92" cy="54" r="2.2" fill="#FFFFFF" />
+  </g>
+</svg>

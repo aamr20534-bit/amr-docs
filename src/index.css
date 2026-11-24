@@ -1,0 +1,122 @@
+
+/* Bundled Luxury Offline Arabic Fonts */
+@font-face { font-family: 'Noto Kufi Arabic'; src: url('/fonts/NotoKufiArabic-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Noto Kufi Arabic'; src: url('/fonts/NotoKufiArabic-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Noto Kufi Arabic'; src: url('/fonts/NotoKufiArabic-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Noto Kufi Arabic'; src: url('/fonts/NotoKufiArabic-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Noto Kufi Arabic'; src: url('/fonts/NotoKufiArabic-Black.ttf') format('truetype'); font-weight: 900; font-display: swap; }
+
+@font-face { font-family: 'Noto Sans Arabic'; src: url('/fonts/NotoSansArabic-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Noto Sans Arabic'; src: url('/fonts/NotoSansArabic-Medium.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Noto Sans Arabic'; src: url('/fonts/NotoSansArabic-SemiBold.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Noto Sans Arabic'; src: url('/fonts/NotoSansArabic-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Noto Sans Arabic'; src: url('/fonts/NotoSansArabic-Black.ttf') format('truetype'); font-weight: 900; font-display: swap; }
+
+@font-face { font-family: 'Noto Naskh Arabic'; src: url('/fonts/NotoNaskhArabic-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Noto Naskh Arabic'; src: url('/fonts/NotoNaskhArabic-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+@font-face { font-family: 'Amiri'; src: url('/fonts/Amiri-Regular.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Amiri'; src: url('/fonts/Amiri-Bold.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+  }
+
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+    font-family: 'Cairo', 'Inter', 'Segoe UI', system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+.safe-pt {
+  padding-top: max(0.5rem, var(--safe-top));
+}
+
+.safe-pb {
+  padding-bottom: max(0.5rem, var(--safe-bottom));
+}
+
+.safe-px {
+  padding-left: max(0.75rem, var(--safe-left));
+  padding-right: max(0.75rem, var(--safe-right));
+}
+
+/* Custom sleek scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.35);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(37, 99, 235, 0.55);
+}
+
+/* Office-like ribbon & canvas helpers */
+.ribbon-scroll {
+  scrollbar-width: thin;
+}
+
+.page-shadow {
+  box-shadow: 0 4px 24px rgba(15, 41, 66, 0.12), 0 1px 4px rgba(15, 41, 66, 0.08);
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible !important;
+  }
+  .print-area {
+    position: absolute !important;
+    inset: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+/* Smooth view transitions & tactile icon/button press effects */
+@keyframes amrViewEnter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.view-transition {
+  animation: amrViewEnter 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button {
+  transition: transform 140ms ease, background-color 150ms ease, color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.96);
+}
